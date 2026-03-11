@@ -1,0 +1,28 @@
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
+
+# Logs
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+
+# Application secrets
+application.properties
+application.yml
+
+# Node
+node_modules/
