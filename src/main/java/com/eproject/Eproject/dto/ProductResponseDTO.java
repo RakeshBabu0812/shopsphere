@@ -17,7 +17,16 @@ public class ProductResponseDTO {
 	
 	private Integer stock;
 	
-	private String CategoryName;
+	private String categoryName;
+	
+	private Double averageRating;
+	
+	private Long reviewCount;
+	
+	private String imageUrl;
+	
+	private String imagePublicId;
+	
 	
 
 }

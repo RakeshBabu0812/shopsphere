@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import com.eproject.Eproject.entity.Category;
 import com.eproject.Eproject.entity.Product;
 import com.eproject.Eproject.repository.CategoryRepository;
 import com.eproject.Eproject.repository.ProductRepository;
-
+import com.eproject.Eproject.specification.ProductSpecification;
 
 import lombok.RequiredArgsConstructor;
 
@@ -80,13 +81,13 @@ public class ProductService {
 		
 		Product product=productRepository.findById(productId).orElseThrow(()->new RuntimeException("product not found"));
 		
-		product.setStock(newStock);
+	
 		
 		if(newStock<0) {
 			throw new RuntimeException("Invalid stock");
 			
 		}
-		
+		product.setStock(newStock);
 		
 		
 	}
@@ -120,6 +121,38 @@ public class ProductService {
 		
 	}
 	
+	public Page<ProductResponseDTO> searchProducts(
+			
+			String name,
+			Double minPrice,
+			Double maxPrice,
+			Long categoryId,
+			Double minRating,
+			int page,
+			int size
+		){
+		
+		
+		Specification<Product> spec=Specification
+				                       .where(ProductSpecification.hasName(name))
+				                       .and(ProductSpecification.hasMinPrice(minPrice))
+				                       .and(ProductSpecification.hasMaxPrice(maxPrice))
+				                       .and(ProductSpecification.hasCategory(categoryId))
+				                       .and(ProductSpecification.hasMinRating(minRating));
+		
+
+	 Pageable pageable=PageRequest.of(page, size,Sort.by("createdAt").descending());
+		  
+		  
+    return productRepository.findAll(spec, pageable).map(this::mapToDTO);
+    
+
+ 
+    
+    
+	
+	}
+	
 	
 	
 	private ProductResponseDTO mapToDTO(Product product) {
@@ -131,7 +164,11 @@ public class ProductService {
 				.description(product.getDescription())
 				.price(product.getPrice())
 				.stock(product.getStock())
-				.CategoryName(product.getCategory().getName())
+				.categoryName(product.getCategory().getName())
+				.averageRating(product.getAverageRating())
+				.reviewCount(product.getReviewCount())
+				.imageUrl(product.getImageUrl())
+				.imagePublicId(product.getImagePublicId())
 				.build();
 			
 	}

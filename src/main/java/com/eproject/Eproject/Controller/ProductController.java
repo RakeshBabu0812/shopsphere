@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.eproject.Eproject.dto.PagedResponse;
 import com.eproject.Eproject.dto.ProductRequestDTO;
 import com.eproject.Eproject.dto.ProductResponseDTO;
+import com.eproject.Eproject.entity.Product;
 import com.eproject.Eproject.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -73,6 +74,7 @@ public class ProductController {
 		    
 		    return ResponseEntity.ok("Stock Updated Successsfully");
 		  
+		    
 		
 	}
 	
@@ -87,6 +89,32 @@ public class ProductController {
 		
 		
 	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<Page<ProductResponseDTO>> searchProducts(
+			
+			@RequestParam(required=false) String name,
+			@RequestParam(required=false) Double minPrice,
+			@RequestParam(required=false)  Double maxPrice,
+			@RequestParam(required=false)  Long categoryId,
+			@RequestParam(required=false) Double minRating,
+			@RequestParam(defaultValue="0") int page,
+			@RequestParam(defaultValue="5") int size
+			){
+		
+		
+		
+		return ResponseEntity.ok(
+				
+				productService.searchProducts(name, minPrice, maxPrice, categoryId, minRating, page, size)
+				
+				);
+		
+		
+		
+		
+	}
+	
 	
 	
 	
