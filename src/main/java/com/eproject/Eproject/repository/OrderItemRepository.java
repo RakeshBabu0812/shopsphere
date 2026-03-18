@@ -1,5 +1,8 @@
 package com.eproject.Eproject.repository;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,6 +24,20 @@ public  interface  OrderItemRepository  extends JpaRepository<OrderItem,Long>{
 			""")
 	
 	boolean hasUserPurchasedProduct(Long userId,Long productId);
+	
+	
+	
+	@Query("""
+			SELECT oi.product.id,oi.product.name,SUM(oi.quantity)
+			FROM OrderItem oi
+			WHERE oi.order.status=OrderStatus.PAID
+			GROUP BY oi.product.id,oi.product.name
+			ORDER BY SUM(oi.quantity) DESC
+			
+			
+			""")
+	List<Object[]> getTopSellingProducts(Pageable pageable);
+	
 	
 	
 	
