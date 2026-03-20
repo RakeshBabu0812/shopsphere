@@ -65,7 +65,7 @@ public interface OrderRepository  extends JpaRepository<Order,Long>{
     
     @Query("""
     		SELECT o
-    		From Order
+    		From Order o
     		WHERE o.status=OrderStatus.PAID
     		ORDER BY o.createdAt DESC  		
     		"""
